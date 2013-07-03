@@ -36,6 +36,8 @@ group :development do
   gem 'puma'
 end
 
+gem 'mongoid', git: 'git://github.com/mongoid/mongoid'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
