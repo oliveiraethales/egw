@@ -1,0 +1,20 @@
+<% if @books.empty? %>
+  <p>Your library is empty! Click <%= link_to 'Here', new_book_path %> here to add a book to your library!</p>
+<% else %>
+  <p id="notice"><%= notice %></p>
+
+  <p>Books</p>
+
+  <table>
+    <thead>
+      <th>Name</th>
+    </thead>
+    <tbody>
+      <% @books.each do |book| %>
+        <tr>
+          <td><%= book.name %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
