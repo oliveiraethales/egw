@@ -1,0 +1,9 @@
+.sc-navpane .nav-tree-folder-view {
+  margin-bottom: 0;
+}
+
+.nav-tree-folder-view {
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 16px;
+}

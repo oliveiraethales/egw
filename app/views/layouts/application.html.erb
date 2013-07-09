@@ -1,14 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Simple library</title>
-  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag    "application", media: "all" %>
+  <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
-<%= yield %>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a href="/" class="brand">Simple Library</a>
+        <ul class="nav">
+          <li class="active"></li>
+          <li>
+            <%= link_to 'Books', books_path %>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 3%"></div>
+
+  <%= yield %>
 
 </body>
 </html>
