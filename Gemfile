@@ -30,9 +30,8 @@ group :development do
 end
 
 gem 'mongoid', git: 'git://github.com/mongoid/mongoid'
-
 # Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
+gem 'bcrypt-ruby'
 
 # Use unicorn as the app server
 # gem 'unicorn'
