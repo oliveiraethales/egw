@@ -5,5 +5,5 @@ Welcome to Simple library!
 The goal is to create an open-source, lightweight and easy to use digital library
 
 ----
-
-rails generate mongoid:config
+Setup stuff:
+1. rails generate mongoid:config
