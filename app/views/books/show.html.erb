@@ -1,8 +1,16 @@
-<%= @book.name %>
-<br />
-<br />
+<%= link_to @book.name, edit_book_path(@book) %>
+<br>
+<br>
 
-<%= @book.content %>
-<br />
-<br />
+<% if @book.chapters.any? %>
+  <p>Chapters</p>
+
+  <% @book.chapters.each do |chapter| %>
+    <%= link_to chapter.name, chapter %>
+  <% end %>
+<% end %>
+
+<%= link_to 'Add chapter', new_chapter_path(book_name: @book.name) %>
+
 <%= link_to 'Books', books_path %>
+<%= link_to 'Chapters', chapters_path(book_name: @book.name) %>

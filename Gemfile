@@ -23,10 +23,13 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-group :development do
+group :development, :test do
   gem 'puma'
   gem 'simple_form'
   gem 'high_voltage'
+
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 gem 'mongoid', git: 'git://github.com/mongoid/mongoid'

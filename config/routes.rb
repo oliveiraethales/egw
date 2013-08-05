@@ -3,7 +3,7 @@ Simplelibrary::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
   root 'high_voltage/pages#show', id: 'index'
 
-  resources :books
+  resources :books, :chapters
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
