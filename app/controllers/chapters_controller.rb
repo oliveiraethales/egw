@@ -14,10 +14,11 @@ class ChaptersController < ApplicationController
 
   def create
     @chapter = Chapter.new(chapter_params)
-    @chapter.book = Book.where(name: params[:book_name])
+    @book = Book.find_by(name: params[:chapter][:book_name])
+    @book.chapters << @chapter
 
-    if @chapter.save
-      redirect_to chapters_url, notice: 'Book saved!'
+    if @book.save
+      redirect_to @book, notice: "Chapter '#{@chapter.name}' added to '#{@book.name}' book!"
     end
   end
 
