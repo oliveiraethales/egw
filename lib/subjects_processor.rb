@@ -1,0 +1,5 @@
+require_relative 'egw_subjects_parser'
+require_relative 'drive_api'
+
+EGWSubjectsParser.process_files
+GoogleDriveAPI.insert_files
