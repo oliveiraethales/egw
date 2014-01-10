@@ -8,25 +8,10 @@ module GoogleDriveAPI
   REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob'
   BASE_DONE_LETTERS_DIR = "#{ENV['HOME']}/egw-files/done"
   drive = nil
+  client = nil
 
   def self.insert_files
-    # Create a new API client & load the Google Drive API
-    client = Google::APIClient.new
-    drive = client.discovered_api('drive', 'v2')
-
-    # Request authorization
-    client.authorization.client_id = CLIENT_ID
-    client.authorization.client_secret = CLIENT_SECRET
-    client.authorization.scope = OAUTH_SCOPE
-    client.authorization.redirect_uri = REDIRECT_URI
-
-    uri = client.authorization.authorization_uri
-    Launchy.open(uri)
-
-    # Exchange authorization code for access token
-    $stdout.write  "Enter authorization code: "
-    client.authorization.code = gets.chomp
-    client.authorization.fetch_access_token!
+    # folder = get_egw_folder
 
     Dir.chdir(BASE_DONE_LETTERS_DIR)
     letter_files = Dir.glob("*")
@@ -53,7 +38,37 @@ module GoogleDriveAPI
     }
   end
 
-  def get_egw_folder
-    drive.files.search
+  def self.get_egw_folder
+    result = client.execute(
+      api_method: drive.files.list,
+      parameters: {
+        'q' => {
+          'title' => 'egw',
+          'mimeType' => 'application/vnd.google-apps.folder'
+        }
+      }
+    )
+
+    result
+  end
+
+  def self.authorize
+    # Create a new API client & load the Google Drive API
+    client = Google::APIClient.new
+    drive = client.discovered_api('drive', 'v2')
+
+    # Request authorization
+    client.authorization.client_id = CLIENT_ID
+    client.authorization.client_secret = CLIENT_SECRET
+    client.authorization.scope = OAUTH_SCOPE
+    client.authorization.redirect_uri = REDIRECT_URI
+
+    uri = client.authorization.authorization_uri
+    Launchy.open(uri)
+
+    # Exchange authorization code for access token
+    $stdout.write  "Enter authorization code: "
+    client.authorization.code = gets.chomp
+    client.authorization.fetch_access_token!
   end
 end
