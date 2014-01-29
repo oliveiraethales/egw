@@ -1,7 +1,9 @@
 source 'https://rubygems.org'
 
+ruby '2.1.0'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.0'
+gem 'rails', '4.0.2'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -33,10 +35,10 @@ group :development, :test do
 end
 
 gem 'mongoid', git: 'git://github.com/mongoid/mongoid'
-# Use ActiveModel has_secure_password
-gem 'bcrypt-ruby'
-
 gem 'google-api-client'
+
+gem 'sidekiq'
+gem 'kiqstand'
 
 # Use unicorn as the app server
 # gem 'unicorn'

@@ -5,6 +5,10 @@ Simplelibrary::Application.routes.draw do
 
   resources :books, :chapters, :categories
 
+  resources :subjects do
+    get 'process_files', on: :collection
+  end
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
