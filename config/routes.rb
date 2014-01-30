@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Simplelibrary::Application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -8,6 +10,8 @@ Simplelibrary::Application.routes.draw do
   resources :subjects do
     get 'process_files', on: :collection
   end
+
+  mount Sidekiq::Web, at: "/sidekiq"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
