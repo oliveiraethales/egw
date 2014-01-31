@@ -26,5 +26,7 @@ module Simplelibrary
     # config.i18n.default_locale = :de
 
     Mongoid.load!("config/mongoid.yml")
+
+    ENV.update YAML.load(File.read(File.expand_path('../application.yml', __FILE__)))
   end
 end
