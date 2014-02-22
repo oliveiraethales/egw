@@ -4,4 +4,5 @@ class Job
   field :job_id, type: String
   field :description, type: String
   field :status, type: String
+  field :progress, type: String
 end

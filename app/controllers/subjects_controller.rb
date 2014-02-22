@@ -11,22 +11,16 @@ class SubjectsController < ApplicationController
     job = Job.where(description: 'process_files').first
 
     if job
-      job.status = Sidekiq::Status::status(job.job_id).to_s
-      job.save
-
       if job.status == 'complete'
         job.destroy
 
         render :process_files, text: 'complete!!'
       else
-        render :process_files, text: "already processing: " + job.job_id + "| status: " + job.status
+        render :process_files, text: "already processing: #{job.job_id} | status: #{job.status} | progress: #{job.progress}"
       end
     else
-      get_letter_files_urls()
-
-      job_id = FileProcessWorker.perform_async('lulz', 30000)
-      job = Job.new(job_id: job_id, description: 'process_files', status: 'just started')
-      job.save
+      job_description = 'process_files'
+      job_id = FileProcessWorker.perform_async(job_description)
 
       render :process_files, text: "processing: " + job_id
     end

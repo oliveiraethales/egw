@@ -38,3 +38,5 @@ gem 'sidekiq-status'
 
 gem 'sinatra', require: false
 gem 'slim'
+
+gem 'ruby-progressbar'
