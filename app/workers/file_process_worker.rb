@@ -44,7 +44,7 @@ class FileProcessWorker
 
       lines.each {|l|
         subject = Subject.new
-        subject.name = l[/[a-z]+/i]
+        subject.name = l
         subject.save
       }
 
