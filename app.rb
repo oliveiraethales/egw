@@ -3,6 +3,7 @@ require 'sinatra'
 require 'sinatra/reloader' if development?
 require 'sinatra/assetpack'
 require_relative 'app/models/subject'
+require_relative 'app/models/item'
 
 Mongoid.load!('config/mongoid.yml')
 
@@ -17,5 +18,7 @@ assets {
 }
 
 get '/' do
-  @subjects = Subject.all
+  @subjects = Subject.all.limit 10
+
+  erb :index
 end

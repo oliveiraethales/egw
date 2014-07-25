@@ -5,6 +5,5 @@ class Subject
 
   field :name, type: String
 
-  has_many :items
-  has_one :subject
+  embeds_many :items
 end

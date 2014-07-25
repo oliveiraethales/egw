@@ -6,5 +6,5 @@ class Item
   field :text, type: String
   field :books, type: String
 
-  belongs_to :subject
+  embedded_in :subject
 end
