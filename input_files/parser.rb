@@ -1,11 +1,11 @@
 require 'mongoid'
 require 'json'
-# require_relative 'app/models/subject'
-# require_relative 'app/models/item'
+require_relative '../app/models/subject'
+require_relative '../app/models/item'
 
 class EgwParser
   def initialize
-    # Mongoid.load!('config/mongoid.yml')
+    Mongoid.load!('config/mongoid.yml')
   end
 
   def parse
@@ -13,158 +13,43 @@ class EgwParser
 
     puts 'Starting...'
 
-    current_dir = File.dirname(__FILE__)
     main_file = File.read(File.expand_path('../main.txt', __FILE__))
 
-    # insert_into_db(origin_text_db)
-    create_json(main_file)
+    insert_into_db(main_file)
 
     finish = Time.now
 
     puts "Finished! Elapsed time: #{finish - start}"
   end
 
-  def create_json(input_file)
-    spaces = 0
-    previous_spaces = 0
-    current_subject = {}
-    current_subject_items = []
-    previous_line_was_letter = false
-    previous_line_was_subject = false
-    previous_line_was_item = false
-    previous_line_was_supplement = false
-    json_file = File.open(File.join(Dir.pwd, 'main.json'), 'w+')
-    # line_count = 0
-
-    puts 'Processing input lines'
-
-    input_file.each_line { |line|
-      # line_count += 1
-
-      # break if line_count > 50
-
-      line = line.strip
-
-      if line.length == 1
-        puts "Letter '#{line}' found"
-
-        previous_line_was_letter = true
-        previous_line_was_subject = false
-        previous_line_was_item = false
-        previous_line_was_supplement = false
-
-        break if line != 'A'
-
-        puts "Started processing for letter: #{line}"
-
-        next
-      end
-
-      if previous_line_was_letter
-        if current_subject[:name]
-          current_subject[:items] = current_subject_items
-          json_file.write current_subject.to_json
-
-          current_subject = {}
-          current_subject[:name] = line
-
-          current_subject_items = []
-        end
-
-        # it IS a subject
-        current_subject[:name] = line
-
-        previous_line_was_item = false
-        previous_line_was_subject = true
-        previous_line_was_letter = false
-        previous_line_was_supplement = false
-
-        next
-      end
-
-      if previous_line_was_subject
-        # it IS an item
-        current_subject_items << { text: line }
-
-        previous_line_was_item = true
-        previous_line_was_subject = false
-        previous_line_was_letter = false
-        previous_line_was_supplement = false
-
-        next
-      end
-
-      if previous_line_was_item
-        # it can be subject or item
-        if line == 'Supplement'
-          previous_line_was_supplement = true
-          previous_line_was_item = false
-          previous_line_was_subject = false
-          previous_line_was_letter = false
-
-          next
-        end
-
-        if line =~ /\d/
-          # contains a number, it PROBABLY is an item
-          current_subject_items << { text: line }
-
-          previous_line_was_item = true
-          previous_line_was_subject = false
-          previous_line_was_letter = false
-          previous_line_was_supplement = false
-
-          next
-        else
-          current_subject[:items] = current_subject_items
-          json_file.puts current_subject.to_json
-
-          current_subject = {}
-          current_subject[:name] = line
-
-          previous_line_was_item = false
-          previous_line_was_subject = true
-          previous_line_was_letter = false
-          previous_line_was_supplement = false
-
-          next
-        end
-      end
-
-      if previous_line_was_supplement
-        # it IS an item
-        current_subject_items << { text: line }
-
-        previous_line_was_supplement = false
-        previous_line_was_item = true
-        previous_line_was_subject = false
-        previous_line_was_letter = false
-
-        next
-      end
-    }
-
-    json_file.close
-  end
-
   def insert_into_db(text_file)
     puts 'Cleaning DB'
 
+    start = Time.now
+
     Subject.destroy_all
 
+    finish = Time.now
+
+    puts "Took: #{finish - start}"
+
     previous_line = ''
-    spaces = 0
-    previous_spaces = 0
+    line_count = 0
     current_subject = nil
     current_subject_items = []
     previous_line_was_letter = false
     previous_line_was_subject = false
     previous_line_was_item = false
     previous_line_was_supplement = false
+    subject_start = nil
+    subject_finish = nil
 
     puts 'Processing input lines'
 
     text_file.each_line do |line|
+      puts "#{Time.now.strftime('%H:%M:%S')}: Processed #{line_count} line(s)" if (line_count % 10) == 0
+
+      line_count += 1
       line = line.strip
 
       if line.length == 1
@@ -173,23 +58,42 @@ class EgwParser
         previous_line_was_item = false
         previous_line_was_supplement = false
 
-        break if line != 'A'
+        if line != 'A'
+          finish = Time.now
+
+          puts "Letter processing took: #{finish - start}"
+        end
 
         puts "Started processing for letter: #{line}"
+
+        start = Time.now
 
         next
       end
 
       if previous_line_was_letter
         if current_subject
+          subject_finish = Time.now
+
+          puts "Saving #{current_subject_items.count} items in Subject #{current_subject.name}"
+          subject_items_save_start = Time.now
+
           current_subject.items = current_subject_items
           current_subject.save
+
+          subject_items_save_end = Time.now
+
+          puts "Saved! Took #{subject_items_save_end - subject_items_save_start}"
 
           current_subject_items = []
         end
 
         # it IS a subject
         current_subject = Subject.create!(name: line)
+
+        puts "Subject change! Started processing for Subject: #{current_subject.name}"
+
+        subject_start = Time.now
 
         previous_line_was_item = false
         previous_line_was_subject = true
