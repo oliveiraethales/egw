@@ -1,0 +1,11 @@
+<% @subjects.each do |s| %>
+  <%= s.name %>
+  <br>
+  <br>
+
+  <ul>
+    <% s.items.each do |i| %>
+      <li><%= i.text %></li>
+    <% end %>
+  </ul>
+<% end %>

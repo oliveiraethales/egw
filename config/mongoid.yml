@@ -1,0 +1,6 @@
+development:
+  sessions:
+    default:
+      database: egw
+      hosts:
+        - localhost:27017
