@@ -3,5 +3,5 @@ source "https://rubygems.org"
 
 ruby '2.1.2'
 
-gem 'mongoid', git: 'git@github.com:mongoid/mongoid.git'
+gem 'mongoid'
 gem 'sinatra'
