@@ -18,7 +18,8 @@ assets {
 }
 
 get '/' do
-  @subjects = Subject.all.limit 10
+  @subjects = Subject.all
+  @subjects_count = Subject.count
 
   erb :index
 end

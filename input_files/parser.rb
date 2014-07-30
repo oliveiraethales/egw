@@ -15,6 +15,8 @@ class EgwParser
 
     main_file = File.read(File.expand_path('../main.txt', __FILE__))
 
+    clean_database
+
     insert_into_db(main_file)
 
     finish = Time.now
@@ -23,146 +25,122 @@ class EgwParser
   end
 
   def insert_into_db(text_file)
-    puts 'Cleaning DB'
-
-    start = Time.now
-
-    Subject.destroy_all
-
-    finish = Time.now
-
-    puts "Took: #{finish - start}"
-
-    previous_line = ''
     line_count = 0
-    current_subject = nil
-    current_subject_items = []
-    previous_line_was_letter = false
-    previous_line_was_subject = false
-    previous_line_was_item = false
-    previous_line_was_supplement = false
-    subject_start = nil
-    subject_finish = nil
+    @current_subject = nil
+    @previous_line_was_letter = false
+    @previous_line_was_subject = false
+    @previous_line_was_item = false
+    @previous_line_was_supplement = false
+    @current_letter = ''
+    @subject_finish = nil
+    @letter_start = nil
+    @subject_start = nil
 
     puts 'Processing input lines'
 
     text_file.each_line do |line|
-      puts "#{Time.now.strftime('%H:%M:%S')}: Processed #{line_count} line(s)" if (line_count % 10) == 0
+      puts "#{Time.now.strftime('%H:%M:%S')}: Processed #{line_count} line(s)" if (line_count % 100) == 0
 
       line_count += 1
       line = line.strip
 
+      next if line.blank?
+
       if line.length == 1
-        previous_line_was_letter = true
-        previous_line_was_subject = false
-        previous_line_was_item = false
-        previous_line_was_supplement = false
-
-        if line != 'A'
-          finish = Time.now
-
-          puts "Letter processing took: #{finish - start}"
-        end
-
-        puts "Started processing for letter: #{line}"
-
-        start = Time.now
-
-        next
-      end
-
-      if previous_line_was_letter
-        if current_subject
-          subject_finish = Time.now
-
-          puts "Saving #{current_subject_items.count} items in Subject #{current_subject.name}"
-          subject_items_save_start = Time.now
-
-          current_subject.items = current_subject_items
-          current_subject.save
-
-          subject_items_save_end = Time.now
-
-          puts "Saved! Took #{subject_items_save_end - subject_items_save_start}"
-
-          current_subject_items = []
-        end
-
+        change_letter(line)
+      elsif line[0].upcase != @current_letter
+        # first character is differente than the current letter, it IS
+        # an item
+        add_item_to_subject(line)
+      elsif line[-1, 1] == ','
+        # last character is a comma, it IS an item
+        add_item_to_subject(line)
+      elsif /[[:lower:]]/.match line[0]
+        # first character is lower case, it IS an item
+        add_item_to_subject(line)
+      elsif @previous_line_was_letter
         # it IS a subject
-        current_subject = Subject.create!(name: line)
-
-        puts "Subject change! Started processing for Subject: #{current_subject.name}"
-
-        subject_start = Time.now
-
-        previous_line_was_item = false
-        previous_line_was_subject = true
-        previous_line_was_letter = false
-        previous_line_was_supplement = false
-
-        next
-      end
-
-      if previous_line_was_subject
+        change_subject(line)
+      elsif @previous_line_was_subject
         # it IS an item
-        current_subject_items << Item.create!(text: line, subject: current_subject)
-
-        previous_line_was_item = true
-        previous_line_was_subject = false
-        previous_line_was_letter = false
-        previous_line_was_supplement = false
-
-        next
-      end
-
-      if previous_line_was_item
+        add_item_to_subject(line)
+      elsif @previous_line_was_item
         # it can be subject or item
         if line == 'Supplement'
-          previous_line_was_supplement = true
-          previous_line_was_item = false
-          previous_line_was_subject = false
-          previous_line_was_letter = false
-
-          next
+          @previous_line_was_supplement = true
+          @previous_line_was_item = false
+          @previous_line_was_subject = false
+          @previous_line_was_letter = false
         end
 
         if line =~ /\d/
           # contains a number, it PROBABLY is an item
-          current_subject_items << Item.create!(text: line, subject: current_subject)
-
-          previous_line_was_item = true
-          previous_line_was_subject = false
-          previous_line_was_letter = false
-          previous_line_was_supplement = false
-
-          next
+          add_item_to_subject(line)
         else
-          current_subject.items = current_subject_items
-          current_subject.save
-
-          current_subject = Subject.create!(name: line)
-
-          previous_line_was_item = false
-          previous_line_was_subject = true
-          previous_line_was_letter = false
-          previous_line_was_supplement = false
-
-          next
+          change_subject(line)
         end
-      end
-
-      if previous_line_was_supplement
+      elsif @previous_line_was_supplement
         # it IS an item
-        current_subject_items << Item.create!(text: line, subject: current_subject)
-
-        previous_line_was_supplement = false
-        previous_line_was_item = true
-        previous_line_was_subject = false
-        previous_line_was_letter = false
-
-        next
+        add_item_to_subject(line)
+      else
+        change_subject(line)
       end
     end
+  end
+
+  def add_item_to_subject(line)
+    @current_subject.items << Item.new(text: line)
+
+    @previous_line_was_item = true
+    @previous_line_was_subject = false
+    @previous_line_was_letter = false
+    @previous_line_was_supplement = false
+  end
+
+  def change_subject(line)
+    @current_subject = Subject.create!(name: line)
+
+    puts "Subject change! Started processing for Subject: #{@current_subject.name}"
+
+    @previous_line_was_item = false
+    @previous_line_was_subject = true
+    @previous_line_was_letter = false
+    @previous_line_was_supplement = false
+
+    @subject_start = Time.now
+  end
+
+  def change_letter(line)
+    unless @current_letter.blank?
+      @letter_finish = Time.now
+
+      puts "Letter processing took: #{@letter_finish - @letter_start}"
+    end
+
+    puts "Started processing for letter: #{line}"
+
+    @current_letter = line
+    @previous_line_was_letter = true
+    @previous_line_was_subject = false
+    @previous_line_was_item = false
+    @previous_line_was_supplement = false
+
+    @letter_start = Time.now
+  end
+
+  def clean_database
+    puts 'Cleaning DB'
+
+    start = Time.now
+
+    session = Moped::Session.new(["127.0.0.1:27017"])
+    session.use :egw
+
+    session.drop
+
+    finish = Time.now
+
+    puts "Clean complete (#{finish - start} seconds)"
   end
 end
 
