@@ -21,7 +21,7 @@ class EgwParser
 
     finish = Time.now
 
-    puts "Finished! Elapsed time: #{finish - start}"
+    puts "Finished! Elapsed time: #{(finish - start).round/60} minutes"
   end
 
   def insert_into_db(text_file)
@@ -39,7 +39,7 @@ class EgwParser
     puts 'Processing input lines'
 
     text_file.each_line do |line|
-      puts "#{Time.now.strftime('%H:%M:%S')}: Processed #{line_count} line(s)" if (line_count % 100) == 0
+      # puts "#{Time.now.strftime('%H:%M:%S')}: Processed #{line_count} line(s)" if (line_count % 100) == 0
 
       line_count += 1
       line = line.strip
@@ -49,8 +49,7 @@ class EgwParser
       if line.length == 1
         change_letter(line)
       elsif line[0].upcase != @current_letter
-        # first character is differente than the current letter, it IS
-        # an item
+        # first character is differente than the current letter, it IS an item
         add_item_to_subject(line)
       elsif line[-1, 1] == ','
         # last character is a comma, it IS an item
@@ -67,10 +66,7 @@ class EgwParser
       elsif @previous_line_was_item
         # it can be subject or item
         if line == 'Supplement'
-          @previous_line_was_supplement = true
-          @previous_line_was_item = false
-          @previous_line_was_subject = false
-          @previous_line_was_letter = false
+          set_line_as_supplement
         end
 
         if line =~ /\d/
@@ -88,6 +84,13 @@ class EgwParser
     end
   end
 
+  def set_line_as_supplement
+    @previous_line_was_supplement = true
+    @previous_line_was_item = false
+    @previous_line_was_subject = false
+    @previous_line_was_letter = false
+  end
+
   def add_item_to_subject(line)
     @current_subject.items << Item.new(text: line)
 
@@ -98,9 +101,9 @@ class EgwParser
   end
 
   def change_subject(line)
-    @current_subject = Subject.create!(name: line)
+    @current_subject = Subject.create!(name: line, letter: @current_letter)
 
-    puts "Subject change! Started processing for Subject: #{@current_subject.name}"
+    # puts "Subject change! Started processing for Subject: #{@current_subject.name}"
 
     @previous_line_was_item = false
     @previous_line_was_subject = true
@@ -113,8 +116,13 @@ class EgwParser
   def change_letter(line)
     unless @current_letter.blank?
       @letter_finish = Time.now
+      time = (@letter_finish - @letter_start).round
 
-      puts "Letter processing took: #{@letter_finish - @letter_start}"
+      if time < 61
+        puts "Letter processing took: #{time} seconds"
+      else
+        puts "Letter processing took: #{time/60} minutes"
+      end
     end
 
     puts "Started processing for letter: #{line}"

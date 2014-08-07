@@ -1,9 +1,50 @@
-Total Subjects: <%= @subjects_count %>
-
+Total Subjects: <%= Subject.count %>
 <br>
-<br>
-
-<% @subjects.each do |s| %>
-  <%= s.name %>
-  <br>
+<% if @letter %>
+  Total Subjects (Letter): <%= @subjects.count %>
 <% end %>
+
+<% if @query %>
+  Total Subjects (Search): <%= @subjects.count %>
+<% end %>
+
+<br>
+<br>
+
+<div class="letters">
+  <ul>
+    <% ('A'..'Z').each do |l| %>
+      <li>
+        <a href="/subjects/<%= l %>"><%= l %></a>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<br>
+<br>
+
+<% unless @letter %>
+  Too many subjects to display ):
+<% else %>
+  Subjects for letter: <%= @letter %>
+
+  <br>
+  <br>
+
+  <ul>
+    <% @subjects.each do |s| %>
+        <li>
+          <%= s.name %>
+          <ul>
+            <% s.items.each do |i| %>
+              <li><%= i.text %></li>
+            <% end %>
+          </ul>
+        </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<br>
+<br>

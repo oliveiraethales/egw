@@ -18,8 +18,25 @@ assets {
 }
 
 get '/' do
-  @subjects = Subject.all
-  @subjects_count = Subject.count
+  erb :index
+end
+
+get '/subjects/:query' do
+  if params[:query].length > 1
+    pass
+  end
+
+  db = Mongoid::Sessions.default
+
+  subjects_collection = db[:subjects]
+
+  @letter = params[:letter]
+  @subjects = Subject.where(letter: @letter)
+  @letter_count = @subjects.count
 
   erb :index
+end
+
+get '/subjects/:query' do
+  @subjects = Subject.where(  name: @letter)
 end
