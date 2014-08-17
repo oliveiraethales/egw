@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="container">
+    <% @subjects.each_slice(10) do |a| %>
+      <div class="col-lg-3">
+        <div class="list-group">
+          <% a.each do |s| %>
+              <a class="list-group-item" href="/subject/<%= s._id %>" title="<%= s.name %>">
+                <%= s.name[0..30] %>
+              </a>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="col-lg-3">
+      <div class="list-group">
+        <a id="load-more" class="list-group-item" href="#">Load more</a>
+      </div>
+    </div>
+  </div>
+</div>

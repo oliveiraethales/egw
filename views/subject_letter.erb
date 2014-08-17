@@ -1,9 +1,0 @@
-Total Subjects (Letter): <%= @count %>
-
-<br>
-<br>
-
-<% @subjects.group_by { |s| s.name[0] }.each do |key, values| %>
-  <%= key %>
-  <br>
-<% end %>

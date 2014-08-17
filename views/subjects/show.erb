@@ -1,0 +1,13 @@
+<p>Items for <%= @subject.name %></p>
+
+<div class="row">
+  <div class="col-lg-4">
+    <ul class="list-group">
+      <% @subject.items.each do |i| %>
+        <li class="list-group-item">
+          <%= i.text %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

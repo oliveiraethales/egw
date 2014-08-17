@@ -1,5 +1,6 @@
 require 'mongoid'
 require 'sinatra'
+require 'sinatra/json'
 require 'sinatra/reloader' if development?
 require 'sinatra/assetpack'
 require_relative 'app/models/subject'
@@ -9,7 +10,9 @@ Mongoid.load!('config/mongoid.yml')
 
 assets {
   js :app, [
-    '/js/*.js'
+    '/js/jquery.js',
+    '/js/bootstrap.js',
+    '/js/main.js'
   ]
 
   css :app, [
@@ -18,25 +21,31 @@ assets {
 }
 
 get '/' do
-  erb :index
+  redirect to '/subjects'
+end
+
+get '/subjects' do
+  @subjects = Subject.limit(50)
+
+  erb :'subjects/index'
 end
 
 get '/subjects/:query' do
-  if params[:query].length > 1
-    pass
-  end
+  @subjects = Subject.where(name: /^#{params[:query]}/i)
 
-  db = Mongoid::Sessions.default
-
-  subjects_collection = db[:subjects]
-
-  @letter = params[:letter]
-  @subjects = Subject.where(letter: @letter)
-  @letter_count = @subjects.count
-
-  erb :index
+  erb :'subjects/index'
 end
 
-get '/subjects/:query' do
-  @subjects = Subject.where(  name: @letter)
+get '/subject/:id' do
+  @subject = Subject.find(params[:id])
+
+  erb :'subjects/show'
+end
+
+get '/subjects.json' do
+  skip = params[:page] * 50
+
+  @subjects = Subject.skip(page).limit(50)
+
+  json @subjects
 end

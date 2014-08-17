@@ -7,7 +7,15 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div class="container">
+      <br>
+
+      <%= erb :letters_search %>
+
+      <br>
+
+      <%= yield %>  
+    </div>
 
     <%= js :app %>
   </body>
