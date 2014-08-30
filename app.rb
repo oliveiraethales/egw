@@ -10,7 +10,7 @@ require 'sinatra/reloader' if development?
 Mongoid.load!('config/mongoid.yml')
 
 assets {
-  # serve '/fonts', from: 'app/fonts'
+  serve '/fonts', from: 'app/fonts'
 
   js :app, [
     '/js/jquery.js',
