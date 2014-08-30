@@ -1,10 +1,11 @@
 require 'mongoid'
 require 'sinatra'
 require 'sinatra/json'
-require 'sinatra/reloader' if development?
 require 'sinatra/assetpack'
 require_relative 'app/models/subject'
 require_relative 'app/models/item'
+
+require 'sinatra/reloader' if development?
 
 Mongoid.load!('config/mongoid.yml')
 
@@ -18,8 +19,11 @@ assets {
   ]
 
   css :app, [
-    '/fonts/*.*',
-    '/css/*.*'
+    '/fonts/glyphicons-halflings-regular.eot',
+    '/fonts/glyphicons-halflings-regular.svg',
+    '/fonts/glyphicons-halflings-regular.ttf',
+    '/fonts/glyphicons-halflings-regular.woff',
+    '/css/bootstrap.css'
   ]
 }
 
