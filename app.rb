@@ -18,8 +18,8 @@ assets {
   ]
 
   css :app, [
-    # '/fonts/glyphicons-halflings-regular.eot',
-    # '/fonts/glyphicons-halflings-regular.svg',
+    '/fonts/glyphicons-halflings-regular.eot',
+    '/fonts/glyphicons-halflings-regular.svg',
     '/fonts/glyphicons-halflings-regular.ttf',
     '/fonts/glyphicons-halflings-regular.woff',
     '/css/bootstrap.css'
