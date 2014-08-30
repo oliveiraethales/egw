@@ -20,7 +20,7 @@ get '/' do
 end
 
 get '/search' do
-  @subjects = Subject.where(name: /^#{params[:search]}/i)
+  @subjects = Subject.where(name: /#{params[:search]}/i)
 
   erb :'subjects/index'
 end
