@@ -10,19 +10,18 @@ require 'sinatra/reloader' if development?
 Mongoid.load!('config/mongoid.yml')
 
 assets {
-  serve '/fonts', from: 'app/fonts'
+  # serve '/fonts', from: 'app/fonts'
 
   js :app, [
     '/js/jquery.js',
-    '/js/bootstrap.js',
-    '/js/main.js'
+    '/js/bootstrap.js'
   ]
 
   css :app, [
-    '/fonts/glyphicons-halflings-regular.eot',
-    '/fonts/glyphicons-halflings-regular.svg',
-    '/fonts/glyphicons-halflings-regular.ttf',
-    '/fonts/glyphicons-halflings-regular.woff',
+    # '/fonts/glyphicons-halflings-regular.eot',
+    # '/fonts/glyphicons-halflings-regular.svg',
+    # '/fonts/glyphicons-halflings-regular.ttf',
+    # '/fonts/glyphicons-halflings-regular.woff',
     '/css/bootstrap.css'
   ]
 }
