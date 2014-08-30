@@ -39,47 +39,49 @@ class EgwParser
     puts 'Processing input lines'
 
     text_file.each_line do |line|
-      # puts "#{Time.now.strftime('%H:%M:%S')}: Processed #{line_count} line(s)" if (line_count % 100) == 0
-
       line_count += 1
       line = line.strip
 
       next if line.blank?
 
       if line.length == 1
-        change_letter(line)
+        # it IS a letter
+        change_letter line
       elsif line[0].upcase != @current_letter
         # first character is differente than the current letter, it IS an item
-        add_item_to_subject(line)
+        add_item_to_subject line
       elsif line[-1, 1] == ','
         # last character is a comma, it IS an item
-        add_item_to_subject(line)
+        add_item_to_subject line
       elsif /[[:lower:]]/.match line[0]
         # first character is lower case, it IS an item
-        add_item_to_subject(line)
+        add_item_to_subject line
       elsif @previous_line_was_letter
         # it IS a subject
-        change_subject(line)
+        change_subject line
       elsif @previous_line_was_subject
         # it IS an item
-        add_item_to_subject(line)
+        add_item_to_subject line
       elsif @previous_line_was_item
-        # it can be subject or item
+        # it can be subject, item or supplement
         if line == 'Supplement'
           set_line_as_supplement
+
+          add_item_to_subject line
+          next
         end
 
         if line =~ /\d/
           # contains a number, it PROBABLY is an item
-          add_item_to_subject(line)
+          add_item_to_subject line
         else
-          change_subject(line)
+          change_subject line
         end
       elsif @previous_line_was_supplement
         # it IS an item
-        add_item_to_subject(line)
+        add_item_to_subject line
       else
-        change_subject(line)
+        change_subject line
       end
     end
   end

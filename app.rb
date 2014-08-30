@@ -9,6 +9,8 @@ require_relative 'app/models/item'
 Mongoid.load!('config/mongoid.yml')
 
 assets {
+  serve '/fonts', from: 'app/fonts'
+
   js :app, [
     '/js/jquery.js',
     '/js/bootstrap.js',
@@ -16,16 +18,17 @@ assets {
   ]
 
   css :app, [
-    '/css/*.css'
+    '/fonts/*.*',
+    '/css/*.*'
   ]
 }
 
 get '/' do
-  redirect to '/subjects'
+  erb :'subjects/index'
 end
 
-get '/subjects' do
-  @subjects = Subject.limit(50)
+get '/search' do
+  @subjects = Subject.where(name: /^#{params[:search]}/i)
 
   erb :'subjects/index'
 end
