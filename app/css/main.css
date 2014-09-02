@@ -3,5 +3,9 @@ body {
 }
 
 .letters-search, .general-search {
-  margin-bottom: 1%;
+  margin: 1%;
+}
+
+.reference {
+  color: #2ecc71;
 }

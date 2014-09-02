@@ -10,8 +10,13 @@ require 'sinatra/reloader' if development?
 Mongoid.load!('config/mongoid.yml')
 
 assets {
+  css :app, [
+    '/css/*.css'
+  ]
+
   js :app, [
-    '/js/jquery.js'
+    '/js/jquery.js',
+    '/js/main.js'
   ]
 }
 
@@ -37,10 +42,62 @@ get '/subject/:id' do
   erb :'subjects/show'
 end
 
-get '/subjects.json' do
-  skip = params[:page] * 50
+helpers do
+  def references(text)
+    if text.include? ';'
+      references_markup = ""
 
-  @subjects = Subject.skip(page).limit(50)
+      # contains more than one book reference
+      text_references = text.split ';'
+      first_ref = text_references.first
+      non_first = text_references.drop 1
 
-  json @subjects
+      references_markup += first_reference(first_ref)
+
+      non_first.each { |ref|
+        references_markup += non_first_reference ref
+      }
+
+      return references_markup += "</p>"
+    else
+      # contains one or none references
+      if text[0] =~ /\d/
+        # first char is number, it is not a reference
+        return "<p>#{text}</p>"
+      else
+        return first_reference(text) + "</p>"
+      end
+    end
+  end
+
+  def non_first_reference(reference)
+    "<span class='reference'>#{reference.strip}</span>; "
+  end
+
+  def first_reference(reference)
+    reference_markup = ''
+    text = reference
+
+    # iterate through the characters until at least
+    # two capital letters are found and then a space (backwards)
+    chars = reference.split(//)
+    previous_was_capital_letter = false
+
+    chars.reverse.each do |c|
+      if previous_was_capital_letter && c == ' '
+        # end of first reference
+        break
+      elsif ('A'..'Z').include? c
+        # capital letter found
+        previous_was_capital_letter = true
+        reference_markup += c
+      else
+        reference_markup += c
+      end
+    end
+
+    text.sub!(reference_markup.reverse, '')
+
+    "<p>#{text}<span class='reference'>#{reference_markup.reverse}</span>; "
+  end
 end
