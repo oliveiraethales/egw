@@ -6,5 +6,7 @@ class Topic
   field :name, type: String
   field :index, type: Integer
 
-  has_many :subjects
+  def subjects
+     Subject.where(topic_index: index)
+  end
 end

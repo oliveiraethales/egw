@@ -39,7 +39,7 @@ get '/topics/:query' do
 end
 
 get '/topics/:index' do
-  @topic = Topic.where(index: params[:index])
+  @topic = Topic.find_by(index: params[:index])
 
   erb :'topics/show'
 end

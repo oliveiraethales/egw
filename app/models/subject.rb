@@ -4,6 +4,5 @@ class Subject
   include Mongoid::Document
 
   field :name, type: String
-
-  belongs_to :topic
+  field :topic_index, type: Integer
 end
