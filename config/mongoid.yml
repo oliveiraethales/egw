@@ -1,7 +1,6 @@
 development:
   sessions:
     default:
-      # uri: mongodb://egw:egw@troup.mongohq.com:10071/app21723167
       database: egw
       hosts:
         - localhost:27017
@@ -9,4 +8,4 @@ development:
 production:
   sessions:
     default:
-      uri: <%= ENV['MONGOHQ_URL'] %> 
+      uri: <%= ENV['MONGOHQ_URL'] %>
