@@ -38,8 +38,8 @@ get '/topics/:query' do
   erb :'topics/index'
 end
 
-get '/topics/:id' do
-  @topic = Topic.find(params[:id])
+get '/topics/:index' do
+  @topic = Topic.where(index: params[:index])
 
   erb :'topics/show'
 end

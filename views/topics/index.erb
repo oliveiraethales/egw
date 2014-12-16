@@ -6,9 +6,9 @@
       <% @topics.each_slice(10) do |a| %>
         <div class="col-lg-3">
           <div class="list-group">
-            <% a.each do |s| %>
-                <a class="list-group-item" href="/topic/<%= s._id %>" title="<%= s.name %>">
-                  <%= s.name[0..20] %>
+            <% a.each do |t| %>
+                <a class="list-group-item" href="/topics/<%= t.index %>" title="<%= t.name %>">
+                  <%= t.name[0..20] %>
                 </a>
             <% end %>
           </div>
