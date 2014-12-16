@@ -6,5 +6,5 @@ class Topic
   field :name, type: String
   field :index, type: Integer
 
-  embeds_many :subjects
+  has_many :subjects
 end

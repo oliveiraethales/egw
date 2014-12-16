@@ -5,5 +5,5 @@ class Subject
 
   field :name, type: String
 
-  embedded_in :topic
+  belongs_to :topic
 end
