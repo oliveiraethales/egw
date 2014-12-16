@@ -2,8 +2,8 @@ require 'mongoid'
 require 'sinatra'
 require 'sinatra/json'
 require 'sinatra/assetpack'
+require_relative 'app/models/topic'
 require_relative 'app/models/subject'
-require_relative 'app/models/item'
 
 require 'sinatra/reloader' if development?
 
@@ -21,25 +21,27 @@ assets {
 }
 
 get '/' do
-  erb :'subjects/index'
+  @topic_count = Topic.count
+
+  erb :'topics/index'
 end
 
 get '/search' do
-  @subjects = Subject.where(name: /#{params[:search]}/i)
+  @topics = Topic.where(name: /#{params[:search]}/i)
 
-  erb :'subjects/index'
+  erb :'topics/index'
 end
 
-get '/subjects/:query' do
-  @subjects = Subject.where(name: /^#{params[:query]}/i)
+get '/topics/:query' do
+  @topics = Topic.where(name: /^#{params[:query]}/i)
 
-  erb :'subjects/index'
+  erb :'topics/index'
 end
 
-get '/subject/:id' do
-  @subject = Subject.find(params[:id])
+get '/topics/:id' do
+  @topic = Topic.find(params[:id])
 
-  erb :'subjects/show'
+  erb :'topics/show'
 end
 
 helpers do

@@ -1,0 +1,13 @@
+<p>Items for <%= @topic.name %></p>
+
+<div class="row">
+  <div class="col-sm-4 col-md-4">
+    <ul class="list-group">
+      <% @topic.subjects.each do |i| %>
+        <li class="list-group-item">
+          <%= references(i.name) %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

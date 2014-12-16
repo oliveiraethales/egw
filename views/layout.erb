@@ -9,10 +9,12 @@
 
   <body>
     <div class="container">
+      <h3>Total topics: <%= @topic_count %></h3>
+
       <%= erb :general_search %>
       <%= erb :letters_search %>
 
-      <%= yield %>  
+      <%= yield %>
     </div>
 
     <%= js :app %>
