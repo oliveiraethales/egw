@@ -3,14 +3,12 @@
   <head>
     <title>EGW</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <%= css :app %>
   </head>
 
   <body>
     <div class="container">
-      <h3>Total topics: <%= @topic_count %></h3>
-
       <%= erb :general_search %>
       <%= erb :letters_search %>
 
@@ -19,6 +17,6 @@
 
     <%= js :app %>
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   </body>
 </html>

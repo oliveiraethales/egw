@@ -3,3 +3,15 @@ var EGW_API = {
   paragraphIdSearchUrl: "https://egwwritings.org/modules/writings/textview/getid_elementauto.php?refcode=%7B%22id_pub%22%3A+BOOK_ID%2C+%22refcode2%22%3A+%22110%22%2C+%22refcode3%22%3A+0%7D",
   bookContentSearchUrl: "https://egwwritings.org/modules/writings/writingsview/showrecords.php?highlight=%22%22&startID=PARAGRAPH_ID&amount=100&initload=true&mobile=0"
 };
+
+$(function() {
+  $('#random-topic').click(function() {
+    window.location = '/topics/random';
+  });
+
+  $('table').DataTable();
+
+  $('tr').click(function() {
+    window.location = $(this).attr('href');
+  });
+});

@@ -2,7 +2,7 @@
   <div class="col-lg-12">
     <div class="btn-group-sm">
         <% ('A'..'Z').each do |l| %>
-          <a class="btn btn-default" href="/topics/<%= l %>"><%= l %></a>
+          <a class="btn btn-default" href="/topics?query=<%= l %>"><%= l %></a>
         <% end %>
     </div>
   </div>

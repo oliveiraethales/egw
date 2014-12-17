@@ -9,3 +9,15 @@ body {
 .reference {
   color: #2ecc71;
 }
+
+#random-topic {
+  cursor: pointer;
+}
+
+table tr {
+  cursor: pointer;
+}
+
+table tr > td {
+  color: #07c;
+}

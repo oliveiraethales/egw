@@ -16,13 +16,13 @@ assets {
 
   js :app, [
     '/js/jquery.js',
+    '/js/jquery.dataTables.min.js',
+    '/js/jquery.dataTables.bootstrap.js',
     '/js/main.js'
   ]
 }
 
 get '/' do
-  @topic_count = Topic.count
-
   erb :'topics/index'
 end
 
@@ -32,14 +32,20 @@ get '/search' do
   erb :'topics/index'
 end
 
-get '/topics/:query' do
+get '/topics' do
   @topics = Topic.where(name: /^#{params[:query]}/i)
 
   erb :'topics/index'
 end
 
-get '/topics/:index' do
-  @topic = Topic.find_by(index: params[:index])
+get '/topics/random' do
+  random_topic = rand(Topic.count)
+
+  redirect to "/topics/#{random_topic}"
+end
+
+get '/topics/:index' do |index|
+  @topic = Topic.find_by index: index
 
   erb :'topics/show'
 end

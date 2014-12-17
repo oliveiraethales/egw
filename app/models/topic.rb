@@ -7,6 +7,6 @@ class Topic
   field :index, type: Integer
 
   def subjects
-     Subject.where(topic_index: index)
+    Subject.where(topic_index: index)
   end
 end
