@@ -9,6 +9,9 @@ require 'sinatra/reloader' if development?
 
 Mongoid.load!('config/mongoid.yml')
 
+set :protection, except: :frame_options
+set :bind, '0.0.0.0'
+
 assets {
   css :app, [
     '/css/*.css'

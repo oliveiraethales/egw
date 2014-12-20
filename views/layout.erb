@@ -1,19 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>EGW</title>
+    <title>EGW Topical Index</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <%= css :app %>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
 
-  <body>
-    <div class="container">
-      <%= erb :general_search %>
-      <%= erb :letters_search %>
+  <body background="/images/bg.jpg">
+    <header>
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-offset-3 col-xs-6">
+            <h1>
+              EGW Topical Index
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
 
-      <%= yield %>
+    <div class="container main">
+      <div class="row row-margin">
+        <div class="col-xs-12">
+          <%= erb :general_search %>
+        </div>
+      </div>
+
+      <div class="row row-margin">
+        <div class="col-xs-12">
+          <%= erb :letters_search %>
+        </div>
+      </div>
+
+      <div class="row row-margin">
+        <%= yield %>
+      </div>
     </div>
 
     <%= js :app %>
